@@ -23,32 +23,32 @@
     <ProjectGuid>{2337177A-B4A5-4CCA-A900-C98DB9952FB4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tickets</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -86,10 +86,10 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,21 +147,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="accounts.cpp" />
     <ClCompile Include="consolefunctions.cpp" />
     <ClCompile Include="layout.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pages.cpp" />
+    <ClCompile Include="pages.driver.cpp" />
+    <ClCompile Include="tariffs.cpp" />
+    <ClCompile Include="ticketing.cpp" />
+    <ClCompile Include="trip.cpp" />
+    <ClCompile Include="users.cpp" />
+    <ClCompile Include="vehicleinformation.cpp" />
+    <ClCompile Include="waitinglist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="accounts.h" />
     <ClInclude Include="commons.h" />
     <ClInclude Include="consolefunctions.h" />
     <ClInclude Include="layout.h" />
-    <ClInclude Include="settings.h" />
+    <ClInclude Include="pages.h" />
+    <ClInclude Include="vehicleinformation.h" />
     <ClInclude Include="tariffs.h" />
     <ClInclude Include="ticketing.h" />
     <ClInclude Include="trip.h" />
     <ClInclude Include="users.h" />
     <ClInclude Include="waitinglist.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pages.admin.cpp" />
+    <ClCompile Include="pages.user.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

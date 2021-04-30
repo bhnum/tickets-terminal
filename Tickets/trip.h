@@ -10,12 +10,13 @@ enum Vehicle {
 };
 
 struct Trip {
-	int id;
+	int id; // Starts from 1
 	Vehicle vehicle;
 	int origincity;
 	int destinationcity;
-	string driverusername;
-	tm departuretime;
+	int driverid;
+	tm departuretime = tm();
+	bool canceled = false;
 };
 
 // Load trips list from trips.txt.
@@ -25,8 +26,6 @@ void loadtrips();
 // Returns -1 when failed (e.g. driver does not exist).
 int definetrip(Trip trip);
 
-// Editable fields: vehicle, origincity, destinationcity, and driverusername.
-// The time field is not modifiable. To modify time, use the postponetrip function.
 // Returns true if succeeded, otherwise false (e.g. trip or driver does not exist).
 bool edittrip(Trip trip);
 
@@ -40,11 +39,17 @@ bool postponetrip(int tripid, tm newtime);
 // This function should also return the cost of the trip ticket to the ticket holders.
 bool canceltrip(int id);
 
-Trip &gettrip(int id);
+Trip gettrip(int id);
+
+vector<int> getemptyseats(int tripid);
 
 vector<Trip> &gettrips();
 
+vector<Trip> getactivetrips();
+
 vector<Trip> gettrips(string driverusername);
+
+vector<Trip> gettrips(int driverid);
 
 vector<Trip> filtertripsby(vector<Trip> &trips, Vehicle vehicle);
 
@@ -52,4 +57,5 @@ vector<Trip> filtertripsfrom(vector<Trip> &trips, int origincity);
 
 vector<Trip> filtertripsto(vector<Trip> &trips, int destinationcity);
 
+// Filter by date not time.
 vector<Trip> filtertripson(vector<Trip> &trips, tm date);

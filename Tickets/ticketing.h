@@ -9,10 +9,11 @@
 using namespace std;
 
 struct Ticket {
-	int id;
+	int id; // A unique randomly genareted 8-digit number
 	int tripid;
-	string holderusername;
-	int chairnumber;
+	int holderid;
+	int seatnumber;
+	int cost;
 	bool canceled = false;
 };
 
@@ -20,17 +21,22 @@ struct Ticket {
 void loadtickets();
 
 // Books a ticket. The ticket.id field is not required and will be generated automaticely.
-Error bookticket(Ticket ticket, string discountcode = "");
+Error bookticket(Ticket &ticket, string discountcode = "");
 
 // Cancle ticket by id.
 // This function returns 90% of the cost of the ticket to the ticket holder if it is
 // being canceled one hour before the departure time, otherwise 50% is returened.
-void cancelticket(int id);
+bool cancelticket(int id);
 
-Ticket &getticket(int id);
+bool editticket(Ticket ticket);
+
+Ticket getticket(int id);
 
 vector<Ticket> &gettickets();
 
-vector<Ticket> getticketsof(string holderusername);
+vector<Ticket> getticketsof(int holderid);
 
-vector<Ticket> getticketsof(int tripid);
+// This function does not return canceled tickets;
+vector<Ticket> gettickets(int tripid);
+
+vector<Ticket> getalltickets(int tripid);

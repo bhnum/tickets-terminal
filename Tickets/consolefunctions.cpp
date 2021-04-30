@@ -20,6 +20,20 @@ void clearscreen(ConsoleColor color)
 	SetConsoleCursorPosition(hConsole, { 0, 0 });
 }
 
+void clearallscreen(ConsoleColor color)
+{
+	CONSOLE_SCREEN_BUFFER_INFO info;
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+	GetConsoleScreenBufferInfo(hConsole, &info);
+	//if (color != -1) info.wAttributes = color;
+
+	DWORD written, cells = info.dwSize.X * info.dwSize.Y;
+	FillConsoleOutputCharacter(hConsole, ' ', cells, { 0,0 }, &written);
+	FillConsoleOutputAttribute(hConsole, info.wAttributes, cells, { 0,0 }, &written);
+	SetConsoleCursorPosition(hConsole, { 0, 0 });
+}
+
 // Source: https://docs.microsoft.com/en-us/windows/console/setconsolecursorposition
 void setcursorposition(short r, short c)
 {

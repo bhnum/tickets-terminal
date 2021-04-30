@@ -42,6 +42,8 @@ typedef int ConsoleColor;
 
 void clearscreen(ConsoleColor color = -1);
 
+void clearallscreen(ConsoleColor color = -1);
+
 void setcursorposition(short r, short c);
 
 void getcursorposition(short &r, short &c);

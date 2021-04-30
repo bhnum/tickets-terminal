@@ -7,27 +7,14 @@
 
 using namespace std;
 
-struct Transaction {
-	int id;
-	int sendernumber;
-	int recievernumber;
-	int amount;
-	tm time;
-};
+void saveaccounts();
 
 // Load accounts and transactions from accounts.txt and transactions.txt.
 void loadaccounts();
 
-Error validatepin(int number, int pin);
+Error validatepin(string number, string pin);
 
-Error getcardbalance(int number, int &balance);
+// Returns the balance if succeeded, -1 otherwise.
+int getcardbalance(string number);
 
-Error performtransaction(Transaction transaction);
-
-Transaction &gettransaction(int id);
-
-vector<Transaction> &gettransactions();
-
-vector<Transaction> gettransactionsfrom(int number);
-
-vector<Transaction> gettransactionsto(int number);
+Error performtransaction(string sendernumber, string recievernumber, int amount, bool force = false);

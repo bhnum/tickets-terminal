@@ -9,47 +9,41 @@ stack<Layout> layouts({ Layout() });
 
 // Short forms of certain widely used expressions.
 #define currentlayout layouts.top()
-#define currentcomponents layouts.top().components
+#define currentelements layouts.top().elements
 
 // ---------------------------------- private function implementations ----------------------------------------
 
-bool isfocusable(Component &c)
+bool isfocusable(Element &c)
 {
-	if (c.type == ComponentTypeButton) return true;
-	if (c.type == ComponentTypeTextBox && !c.readonly) return true;
+	if (c.type == ElementTypeButton) return true;
+	if (c.type == ElementTypeTextBox && !c.readonly) return true;
 	return false;
 }
 
-int getfocusedcomponentindex()
+int getfocusedelementindex()
 {
-	int focusables = 0;
-	for (int i = 0; i < currentcomponents.size(); i++)
+	vector<int> focusables;
+
+	for (int i = 0; i < currentelements.size(); i++)
 	{
-		Component& c = currentcomponents[i];
+		Element& c = currentelements[i];
 		if (isfocusable(c))
-			focusables++;
+			focusables.push_back(i);
 	}
-	if (focusables == 0)
+	if (focusables.size() == 0)
 		return 0;
 
-	currentlayout.tabindex = (currentlayout.tabindex + focusables) % focusables;
-	int index = 0;
-	for (int t = currentlayout.tabindex; index < currentcomponents.size() && t > 0 ; index++)
-	{
-		Component& c = currentcomponents[index];
-		if (isfocusable(c))
-			t--;
-	}
-	return index;
+	currentlayout.tabindex = (currentlayout.tabindex + focusables.size()) % focusables.size();
+	return focusables[currentlayout.tabindex];
 }
 
-void nextcomponent()
+void gotonextelement()
 {
 	currentlayout.tabindex++;
 	currentlayout.colindex = 0;
 }
 
-void previouscomponent()
+void gotopreviouselement()
 {
 	currentlayout.tabindex--;
 	currentlayout.colindex = 0;
@@ -58,7 +52,7 @@ void previouscomponent()
 // Inputs which should be processed for the focused textbox are sent to this fuction.
 void processtextbox(int ch, bool controlchar = false)
 {
-	Component &textbox = currentcomponents[getfocusedcomponentindex()];
+	Element &textbox = currentelements[getfocusedelementindex()];
 	string &text = textbox.text;
 	if (controlchar)
 	{
@@ -126,57 +120,53 @@ void closelayout()
 
 void clearlayout()
 {
-	currentcomponents.clear();
+	currentelements.clear();
 }
 
 void refreshlayout()
 {
-	// Get the focused component index.
-	int focus = getfocusedcomponentindex();
+	// Get the focused element index.
+	int focus = getfocusedelementindex();
 
-	// The coordinates of the focused component.
+	// The coordinates of the focused element.
 	short consoleinputx = 0, consoleinputy = 0;
 
-	// The cursor should be visible if the focused component is a textbox, invisible otherwise.
+	// The cursor should be visible if the focused element is a textbox, invisible otherwise.
 	bool cursorvisible = false;
 
-	// Hide the cursor while rendering the components.
+	// Hide the cursor while rendering the elements.
 	showcursor(false);
 
-	// Start drawing from the top left of the screen.
+	// Start drawing from the top left corner of the screen.
 	setcursorposition(0, 0);
 
 	// Draw the layout caption with red background.
 	setlinecolor(BackColorRed | ForeColorWhite);
-	cout << currentlayout.caption << endl << endl;
+	cout << currentlayout.caption;
 
-	for (int i = 0; i < currentcomponents.size(); i++)
+	for (int i = 0; i < currentelements.size(); i++)
 	{
-		switch (currentcomponents[i].type)
+		switch (currentelements[i].type)
 		{
-		case ComponentTypeText:
-			// Empty text components mean new line and are used to put buttons in a new line.
-			if (currentcomponents[i].text == "")
-				continue;
-
+		case ElementTypeText:
 			// Draw text in the corressping color.
-			setconsolecolor(currentcomponents[i].color);
-			cout << currentcomponents[i].text;
+			setconsolecolor(currentelements[i].color);
+			cout << currentelements[i].text;
 			break;
 
-		case ComponentTypeTextBox:
+		case ElementTypeTextBox:
 		{
 			// Draw the title of the textbox in grey with maximum width of 20 chracters.
 			setconsolecolor(BackColorWhite | ForeColorDarkGrey);
-			string title = currentcomponents[i].title;
-			title.resize(20, ' ');
-			cout << title;
+			string title = currentelements[i].title;
+			title.resize(30, ' ');
+			cout << endl << endl << title;
 
-			if (currentcomponents[i].readonly) 
+			if (currentelements[i].readonly) 
 			{
 				// Draw the text of the textbox as regular text.
 				setconsolecolor(currentlayout.color);
-				cout << currentcomponents[i].text;
+				cout << currentelements[i].text;
 			}
 			else
 			{
@@ -186,47 +176,47 @@ void refreshlayout()
 				{
 					cursorvisible = true;
 					getcursorposition(consoleinputy, consoleinputx);
-					setconsolecolor(BackColorMagenta | ForeColorWhite);
+					setconsolecolor(BackColorBlue | ForeColorWhite);
 				}
 				else
-					setconsolecolor(BackColorBlue | ForeColorWhite);
-				string value = currentcomponents[i].text;
+					setconsolecolor(BackColorMagenta | ForeColorWhite);
+				string value = currentelements[i].text;
 
 				// Password should be typed eith *.
-				if (currentcomponents[i].password)
+				if (currentelements[i].password)
 					value = string(value.size(), '*');
 
-				value.resize(80, ' ');
+				value.resize(70, ' ');
 				cout << value;
 			}
 			break;
 		}
 
-		case ComponentTypeButton:
+		case ElementTypeButton:
 			// Buttons have a padding of 20 chracters.
-			setconsolecolor(BackColorWhite | ForeColorBlack);
-			cout << string(19, ' ');
+			setconsolecolor(currentlayout.color);
+			cout << endl << endl << string(29, ' ');
 
-			for (; i < currentcomponents.size() && currentcomponents[i].type == ComponentTypeButton; i++)
+			for (; i < currentelements.size() && currentelements[i].type == ElementTypeButton; i++)
 			{
 				cout << " ";
 				if (i == focus)
 				{
 					cursorvisible = false;
-					setconsolecolor(currentcomponents[i].focusedcolor);
+					setconsolecolor(currentelements[i].focusedcolor);
 				}
 				else
-					setconsolecolor(currentcomponents[i].color);
-				cout << " " << currentcomponents[i].text << " ";
-				setconsolecolor(BackColorWhite | ForeColorBlack);
+					setconsolecolor(currentelements[i].color);
+				cout << " " << currentelements[i].text << " ";
+				setconsolecolor(currentlayout.color);
 			}
 			i--;
 			break;
 		}
-		if (i < currentcomponents.size() - 1)
-			cout << endl << endl;
+		/*if (i < currentelements.size() - 1)
+			cout << endl << endl;*/
 	}
-	// Set the cursor position on the focused component.
+	// Set the cursor position on the focused element.
 	setcursorposition(consoleinputy, consoleinputx + currentlayout.colindex);
 	showcursor(cursorvisible);
 }
@@ -238,52 +228,57 @@ void puttext(string text, ConsoleColor color)
 
 void puttext(string name, string text, ConsoleColor color)
 {
-	Component c;
-	c.type = ComponentTypeText;
+	Element c;
+	c.type = ElementTypeText;
 	c.name = name;
 	c.text = text;
 	if (color == -1)
 		c.color = currentlayout.color;
 	else
 		c.color = color;
-	currentcomponents.push_back(c);
+	currentelements.push_back(c);
 }
 
 void puttextbox(string name, string title, string text, bool password, bool readonly)
 {
-	Component c;
-	c.type = ComponentTypeTextBox;
+	Element c;
+	c.type = ElementTypeTextBox;
 	c.name = name;
 	c.title = title;
 	c.text = text;
 	c.password = password;
 	c.readonly = readonly;
-	currentcomponents.push_back(c);
+	currentelements.push_back(c);
 }
 
 void putbutton(string name, string text, ConsoleColor color, ConsoleColor focusedcolor)
 {
-	Component c;
-	c.type = ComponentTypeButton;
+	Element c;
+	c.type = ElementTypeButton;
 	c.name = name;
 	c.text = text;
 	c.color = color;
 	c.focusedcolor = focusedcolor;
-	currentcomponents.push_back(c);
+	currentelements.push_back(c);
 }
 
-Component &getcomponent(string name)
+Element &getelement(string name)
 {
 	// Find the index of the textbox.
 	int index = -1;
-	for (int i = 0; i < currentcomponents.size(); i++)
-		if (currentcomponents[i].name == name)
+	for (int i = 0; i < currentelements.size(); i++)
+		if (currentelements[i].name == name)
 		{
 			index = i;
 			break;
 		}
 
-	return currentcomponents[index];
+	return currentelements[index];
+}
+
+Layout & getlayout()
+{
+	return currentlayout;
 }
 
 string waitforuserinput()
@@ -294,24 +289,24 @@ string waitforuserinput()
 	{
 		int ch = _getch();
 
-		// Get the focused component.
-		Component &c = currentcomponents[getfocusedcomponentindex()];
+		// Get the focused element.
+		Element &c = currentelements[getfocusedelementindex()];
 		switch (ch)
 		{
-		case KeyTab: // Jump to next focusable component.
-			nextcomponent();
+		case KeyTab: // Jump to next focusable element.
+			gotonextelement();
 			break;
 
 		case KeyEnter: // Enter key for button indicates button click,
-					   // and for textbox indicates jump to next component.
-			if (c.type == ComponentTypeButton)
+					   // and for textbox indicates jump to next element.
+			if (c.type == ElementTypeButton)
 				return c.name;
 			else
-				nextcomponent();
+				gotonextelement();
 			break;
 
 		case KeyBackspace: // Backspace is processed in the focused textbox.
-			if (c.type == ComponentTypeTextBox)
+			if (c.type == ElementTypeTextBox)
 				processtextbox(ch);
 			break;
 
@@ -323,37 +318,37 @@ string waitforuserinput()
 			ch = _getch();
 			switch (ch)
 			{
-			case KeyUp: // Jump to previous focusable component.
-				previouscomponent();
+			case KeyUp: // Jump to previous focusable element.
+				gotopreviouselement();
 				break;
 
-			case KeyDown: // Jump to next focusable component.
-				nextcomponent();
+			case KeyDown: // Jump to next focusable element.
+				gotonextelement();
 				break;
 
 			case KeyLeft: // For textbox move to next character,
-						  // otherwise jump to next focusable component.
-				if (c.type == ComponentTypeButton)
-					previouscomponent();
+						  // otherwise jump to next focusable element.
+				if (c.type == ElementTypeButton)
+					gotopreviouselement();
 				else
 					processtextbox(ch, true);
 				break;
 
 			case KeyRight: // For textbox move to previous character,
-						   // otherwise jump to previous focusable component.
-				if (c.type == ComponentTypeButton)
-					nextcomponent();
+						   // otherwise jump to previous focusable element.
+				if (c.type == ElementTypeButton)
+					gotonextelement();
 				else
 					processtextbox(ch, true);
 				break;
 
 			case KeyDelete: // Delete key is processed in the focused textbox.
-				if (c.type == ComponentTypeTextBox)
+				if (c.type == ElementTypeTextBox)
 					processtextbox(ch, true);
 				break;
 
 			default: // Other control characters including home and end keys for processing in the focused textbox.
-				if (c.type == ComponentTypeTextBox)
+				if (c.type == ElementTypeTextBox)
 					processtextbox(ch, true);
 				break;
 			}
@@ -361,7 +356,7 @@ string waitforuserinput()
 			break;
 
 		default: // Other characters for processing in the focused textbox.
-			if (c.type == ComponentTypeTextBox)
+			if (c.type == ElementTypeTextBox)
 				processtextbox(ch);
 			break;
 		}
