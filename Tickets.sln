@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tickets", "Tickets\Tickets.vcxproj", "{2337177A-B4A5-4CCA-A900-C98DB9952FB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Debug|x64.ActiveCfg = Debug|x64
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Debug|x64.Build.0 = Debug|x64
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Debug|x86.ActiveCfg = Debug|Win32
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Debug|x86.Build.0 = Debug|Win32
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Release|x64.ActiveCfg = Release|x64
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Release|x64.Build.0 = Release|x64
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Release|x86.ActiveCfg = Release|Win32
+		{2337177A-B4A5-4CCA-A900-C98DB9952FB4}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DAA057D5-C94E-41A0-BE4C-F766B7FE54F0}
+	EndGlobalSection
+EndGlobal
