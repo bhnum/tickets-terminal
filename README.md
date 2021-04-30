@@ -1,6 +1,4 @@
 # Tickets
 Demo ticket sales app for public transportation system under terminal. It only works under windows at this moment.
 
-
-![Demo](image/demo.webp)
-
+![Demo](Image/demo.webp)
